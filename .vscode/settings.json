@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Emotionlab - copia.sln"
+    "dotnet.defaultSolution": "EmotionLab.sln"
 }
