@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 
-public class BreathingExercise : MonoBehaviour
+public class EjercicioRespiracion : MonoBehaviour
 {
-    public GameObject balloonObject;        // 🎈 El globo o balón
+    public GameObject balloonObject;        // 🎈 El globo o balón 
     public DialogoTips dialogoTips;         // 🔗 Referencia al script de diálogos
     public int nextPanelIndexAfterExercise; // Panel al que debe ir después del ejercicio
 
@@ -14,10 +15,27 @@ public class BreathingExercise : MonoBehaviour
     public float exhaleDuration = 8f;       // Duración exhalar
     public float scaleMultiplier = 1f;    // Tamaño máximo del globo al inhalar
     private bool isRunning = false;
+    private Vector3 baseScale;
 
     [Header("UI opcional")] //Texto Inhala, Exhala
-    public Text instructionText;
-    public Slider progressBar; 
+    public TextMeshProUGUI instructionText;
+    //public GameObject panelText;
+
+        void Start()
+    {
+         baseScale = balloonObject.transform.localScale;
+
+        // Ocultar todo al iniciar
+        balloonObject.SetActive(false);
+        //panelText.SetActive(false);
+
+        if (instructionText != null)
+            instructionText.gameObject.SetActive(false);
+
+        /*if (panelText!= null)
+            panelText.gameObject.SetActive(false);*/
+    }
+
 
     public void StartExercise()
     {
@@ -26,36 +44,38 @@ public class BreathingExercise : MonoBehaviour
             StartCoroutine(BreathingRoutine());
         }
     }
-
+    
     private IEnumerator BreathingRoutine()
     {
         isRunning = true;
         balloonObject.SetActive(true);
+        //panelText.SetActive(true);
         if (instructionText != null) instructionText.gameObject.SetActive(true);
-        if (progressBar != null) progressBar.gameObject.SetActive(true);
+        //if (panelText != null) panelText.gameObject.SetActive(true);
 
         for (int i = 0; i < cycles; i++)
         {
             // Inhalar
-            if (instructionText != null) instructionText.text = "Inhala...";
+            if (instructionText != null) instructionText.text = "Inhala en 4s...";
             yield return StartCoroutine(ScaleBalloon(Vector3.one * scaleMultiplier, inhaleDuration));
 
             // Sostener
-            if (instructionText != null) instructionText.text = "Sostén...";
+            if (instructionText != null) instructionText.text = "Sostén en 7s...";
             yield return new WaitForSeconds(holdDuration);
 
             // Exhalar
-            if (instructionText != null) instructionText.text = "Exhala...";
-            yield return StartCoroutine(ScaleBalloon(Vector3.one, exhaleDuration));
+            if (instructionText != null) instructionText.text = "Exhala en 8s...";
+            yield return StartCoroutine(ScaleBalloon(baseScale, exhaleDuration));
         }
         
         // Final del ejercicio
-        if (instructionText != null) instructionText.text = "Excelente trabajo 🙌🏽";
+        if (instructionText != null) instructionText.text = "Excelente trabajo!";
         yield return new WaitForSeconds(1.5f);
 
         balloonObject.SetActive(false);
+        //panelText.SetActive(false);
         if (instructionText != null) instructionText.gameObject.SetActive(false);
-        if (progressBar != null) progressBar.gameObject.SetActive(false);
+        //if (panelText != null) panelText.gameObject.SetActive(false);
         isRunning = false;
 
         // Al terminar el ejercicio, decirle al script de diálogo que avance
@@ -72,9 +92,6 @@ public class BreathingExercise : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             balloonObject.transform.localScale = Vector3.Lerp(initialScale, targetScale, t);
-            
-            // Actualiza la barra de progreso (si existe)
-            if (progressBar != null) progressBar.value = t;
             yield return null;
         }
     }

@@ -1,7 +1,18 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<<< HEAD:Assets/Sci_fi_Drones/Models/Materials.meta
 guid: 3f9a1a1d2623c6347800678800c734e4
 folderAsset: yes
 DefaultImporter:
+========
+guid: 60b4660537cfcd8498d0c7303fb3b256
+PrefabImporter:
+>>>>>>>> origin/kata:Assets/AssetsRelajacion/Imports/3D model Pack Baskets/Prefabs/light/Basket_02_light.prefab.meta
+=======
+guid: f6f891d9e69aa1645ab0fb71f5ced988
+folderAsset: yes
+DefaultImporter:
+>>>>>>> origin/kata
   externalObjects: {}
   userData: 
   assetBundleName: 

@@ -1,8 +1,28 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<<< HEAD:Assets/XR/Loaders/MockHMDLoader.asset.meta
 guid: 50fd81730cbd9f740b45f89bb0a02cbb
+=======
+<<<<<<<< HEAD:Assets/Sci_fi_Drones/Models/Materials/Robot_Guardian.mat.meta
+guid: 8f5f2a6c18e7b614b9a4e0e70872902c
+>>>>>>> origin/kata
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
+========
+<<<<<<< HEAD
+guid: 5f12e183e6f356b44bb846a67a682f3a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+>>>>>>>> origin/kata:Assets/Sci_fi_Drones/Models/Materials/Robot_Guardian.mat.meta
+=======
+guid: 9d181741ecd155f49b3d021fa1e31d51
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+>>>>>>>> origin/kata:Assets/XR/Loaders/MockHMDLoader.asset.meta
+>>>>>>> origin/kata
   userData: 
   assetBundleName: 
   assetBundleVariant: 

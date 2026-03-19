@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DialogoTips : MonoBehaviour
 {
@@ -13,10 +14,7 @@ public class DialogoTips : MonoBehaviour
         {
             textPanels[currentPanelIndex].SetActive(true);
         }
-
     }
-
-
     public void OnNextButton() 
     {
         textPanels[currentPanelIndex].SetActive(false);

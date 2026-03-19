@@ -1,8 +1,15 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: f65a3d409b7255143b412641934f4df7
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 0
+=======
+guid: eabc5a487ed7a714a962c974b0756005
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+>>>>>>> origin/kata
   userData: 
   assetBundleName: 
   assetBundleVariant: 
