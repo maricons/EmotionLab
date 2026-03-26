@@ -8,9 +8,11 @@ public class scriptContadorDucks : MonoBehaviour
     // Start is called before the first frame update
     private GameObject gDuck;
     public GameObject giantDuck;
+    public GameObject mensajeFinal;
     void Start()
     {
         gDuck = GameObject.Find("GiantDuck");
+
     }
 
     // Update is called once per frame
@@ -29,6 +31,7 @@ public class scriptContadorDucks : MonoBehaviour
         if (cDucks == 8)
         {
             giantDuck.SetActive(true);
+            mensajeFinal.SetActive(true);
         }
 
     }

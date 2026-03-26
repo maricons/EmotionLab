@@ -45,6 +45,20 @@ public class EjercicioRespiracion : MonoBehaviour
         }
     }
     
+    private IEnumerator MostrarCuentaAtras(string accion, float duracion)
+    {
+        int tiempo = Mathf.CeilToInt(duracion);
+
+        while (tiempo > 0)
+        {
+            if (instructionText != null)
+                instructionText.text = accion + "... " + tiempo;
+
+            yield return new WaitForSeconds(1f);
+            tiempo--;
+        }
+    }
+    
     private IEnumerator BreathingRoutine()
     {
         isRunning = true;
@@ -53,18 +67,22 @@ public class EjercicioRespiracion : MonoBehaviour
         if (instructionText != null) instructionText.gameObject.SetActive(true);
         //if (panelText != null) panelText.gameObject.SetActive(true);
 
+        instructionText.text = "¡Comencemos!";
+        yield return new WaitForSeconds(2f); // puedes ajustar el tiempo
+
+
         for (int i = 0; i < cycles; i++)
         {
             // Inhalar
-            if (instructionText != null) instructionText.text = "Inhala en 4s...";
-            yield return StartCoroutine(ScaleBalloon(Vector3.one * scaleMultiplier, inhaleDuration));
+            StartCoroutine(MostrarCuentaAtras("Inhala", inhaleDuration));
+            yield return StartCoroutine(ScaleBalloon(Vector3.one * scaleMultiplier, inhaleDuration));;
 
             // Sostener
-            if (instructionText != null) instructionText.text = "Sostén en 7s...";
+           StartCoroutine(MostrarCuentaAtras("Sostén", holdDuration));
             yield return new WaitForSeconds(holdDuration);
 
             // Exhalar
-            if (instructionText != null) instructionText.text = "Exhala en 8s...";
+            StartCoroutine(MostrarCuentaAtras("Exhala", exhaleDuration));
             yield return StartCoroutine(ScaleBalloon(baseScale, exhaleDuration));
         }
         

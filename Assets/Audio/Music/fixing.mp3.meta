@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/AssetsRelajacion/Duck_sounds/break.mp3.meta
-guid: d750cb274adcab44b9e7b03909d8594a
-========
-guid: 03b959e59c978e243a444095b7b7217a
->>>>>>>> origin/kata:Assets/AssetsRelajacion/Duck_sounds/Final Fantasy VII - Tifa's Theme (Lofi Lia Remix).mp3.meta
+guid: 30ff67cfec574c642a0d2679503b440b
 AudioImporter:
   externalObjects: {}
   serializedVersion: 7
