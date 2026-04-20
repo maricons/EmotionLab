@@ -73,7 +73,7 @@ El desarrollo se organiza en 4 Sprints técnicos, con un fuerte enfoque en la es
 ### Configuración del Repositorio
 1.  **Clonar el repositorio:**
     ```bash
-    git clone [https://github.com/KatalinaPerez/EmotionLab.git](https://github.com/KatalinaPerez/EmotionLab.git)
+    git clone https://github.com/KatalinaPerez/EmotionLab.git
     ```
 2.  Abrir el proyecto en Unity.
 3.  **Importar Assets:** Asegurarse de importar los *Starter Assets* de **XR Interaction Toolkit** desde el Package Manager.
