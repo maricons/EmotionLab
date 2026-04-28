@@ -52,8 +52,6 @@ Una vez superada la tarea, el usuario accede a un espacio de relajación final:
 
 ## 🗺️ Roadmap e Hitos (Planificación 2026)
 
-## 🗺️ Roadmap e Hitos (Planificación 2026)
-
 El desarrollo se organiza en 4 Sprints técnicos, con un fuerte enfoque en la estabilidad del código y la captura de datos para análisis posterior.
 
 | Estado | Fase | Periodo | Actividades Clave y Entregables | KPI / Hito Técnico |
