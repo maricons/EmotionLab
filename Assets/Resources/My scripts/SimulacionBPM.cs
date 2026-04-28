@@ -11,6 +11,8 @@ public class SimulacionBPM : MonoBehaviour
 
     void Update()
     {
+        if (temporizador == null) return;
+
         if (!flag && temporizador.getTemporizadorActivo())
         {
             flag = true;
@@ -23,7 +25,8 @@ public class SimulacionBPM : MonoBehaviour
         while (flag)
         {
             int bpm = Random.Range(60, 180);
-            displayText.text = bpm.ToString();
+            if (displayText != null)
+                displayText.text = bpm.ToString();
             yield return new WaitForSeconds(0.5f); // Proporciona un intervalo de actualización
         }
     }

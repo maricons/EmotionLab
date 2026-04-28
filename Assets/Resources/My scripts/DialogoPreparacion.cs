@@ -14,6 +14,8 @@ public class DialogoPreparacion : MonoBehaviour
 
     void Update()
     {
+        // Validar referencias antes de calcular distancia
+        if (robot == null || targetPosition == null) return;
 
         //ver si el robot está cerca de la posicion deseada
         if (!flag && Vector3.Distance(robot.transform.position, targetPosition.position) < 1)
@@ -22,9 +24,13 @@ public class DialogoPreparacion : MonoBehaviour
         }
 
 
-        if (flag == true && currentPanelIndex == 0) 
+        if (flag == true && currentPanelIndex == 0)
         {
-            textPanels[currentPanelIndex].SetActive(true);
+            if (textPanels != null && currentPanelIndex < textPanels.Length
+                && textPanels[currentPanelIndex] != null)
+            {
+                textPanels[currentPanelIndex].SetActive(true);
+            }
             flag = false; // Resetear la bandera para que no se active de nuevo
         }
     }
@@ -32,10 +38,16 @@ public class DialogoPreparacion : MonoBehaviour
 
     public void OnNextButton()
     {
-        textPanels[currentPanelIndex].SetActive(false);
+        if (textPanels != null && currentPanelIndex >= 0 && currentPanelIndex < textPanels.Length
+            && textPanels[currentPanelIndex] != null)
+        {
+            textPanels[currentPanelIndex].SetActive(false);
+        }
+
         currentPanelIndex++;
 
-        if (currentPanelIndex < textPanels.Length)
+        if (textPanels != null && currentPanelIndex < textPanels.Length
+            && textPanels[currentPanelIndex] != null)
         {
             textPanels[currentPanelIndex].SetActive(true);
         }
@@ -44,9 +56,10 @@ public class DialogoPreparacion : MonoBehaviour
 
     public void OnSkipIntroButton()
     {
+        if (textPanels == null) return;
         foreach (GameObject panel in textPanels)
         {
-            panel.SetActive(false);
+            if (panel != null) panel.SetActive(false);
         }
 
     }

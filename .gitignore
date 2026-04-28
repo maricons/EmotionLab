@@ -50,13 +50,17 @@ Assets/**/*.tif
 Assets/**/*.tiff
 Assets/**/*.exr
 Assets/**/*.wav
-Assets/**/*.mp3
+# *.mp3 ahora se trackean via LFS (ver .gitattributes) para que la
+# musica no se "pierda" entre clones del repo.
+# Assets/**/*.mp3
 Assets/**/*.ogg
 Assets/**/*.mp4
 Assets/**/*.mov
 Assets/**/*.avi
 Assets/**/*.mat
-Assets/**/*.prefab
+# *.prefab ahora se trackean via LFS para no tener que reconstruir
+# GameObjects a mano entre clones.
+# Assets/**/*.prefab
 Assets/**/*.asset
 Assets/**/*.unitypackage
 
