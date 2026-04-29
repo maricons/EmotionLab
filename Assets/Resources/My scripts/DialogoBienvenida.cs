@@ -1,49 +1,20 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class DialogoBienvenida : MonoBehaviour
+/// <summary>
+/// Diálogo de bienvenida del Waiting Room. Al terminar la secuencia
+/// (último panel + Next, o Skip), arranca al robot.
+///
+/// La lógica de navegación (textPanels, currentPanelIndex, OnNextButton,
+/// OnSkipIntroButton) vive en <see cref="DialogoBase"/>.
+/// </summary>
+public class DialogoBienvenida : DialogoBase
 {
-    public GameObject[] textPanels; // Paneles con cuadros de texto
-    private int currentPanelIndex = 0;
+    [Header("Acción al terminar la secuencia")]
+    [Tooltip("Robot que empezará a moverse cuando termine la intro. Asignar desde el Inspector.")]
+    public RobotMover robotMover;
 
-    public RobotMover robotMover; // Asignar desde el editor
-
-    public void OnNextButton()
+    protected override void OnSequenceFinished()
     {
-        // Validar índice antes de desactivar el panel actual
-        if (textPanels != null && currentPanelIndex >= 0 && currentPanelIndex < textPanels.Length
-            && textPanels[currentPanelIndex] != null)
-        {
-            textPanels[currentPanelIndex].SetActive(false);
-        }
-
-        currentPanelIndex++;
-
-        if (textPanels != null && currentPanelIndex < textPanels.Length)
-        {
-            if (textPanels[currentPanelIndex] != null)
-                textPanels[currentPanelIndex].SetActive(true);
-        }
-        else
-        {
-            // Fin de la intro, mover robot
-            if (robotMover != null)
-                robotMover.StartMoving();
-            else
-                Debug.LogWarning("[DialogoBienvenida] robotMover no asignado en el Inspector.");
-        }
-    }
-
-    public void OnSkipIntroButton()
-    {
-        if (textPanels != null)
-        {
-            foreach (GameObject panel in textPanels)
-            {
-                if (panel != null) panel.SetActive(false);
-            }
-        }
-
         if (robotMover != null)
             robotMover.StartMoving();
         else
