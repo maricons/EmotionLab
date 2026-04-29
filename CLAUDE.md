@@ -161,13 +161,13 @@ Application.persistentDataPath/
 
 ### Sprint 1 — Estabilidad base
 - [ ] Unificar `DialogoBienvenida`, `DialogoPreparacion` y `DialogoTips` en una sola clase `DialogoBase` configurable por Inspector
-- [ ] Corregir acceso a arrays sin verificar límites (todos los scripts de diálogo y Temporizador)
-- [ ] Corregir corrutinas en paralelo en `EjercicioRespiracion.cs`
-- [ ] Agregar null checks en `DialogoBienvenida.robotMover`, `Interrupciones.temporizador`, `SimulacionBPM.displayText`, `Temporizador.robot`
+- [x] Corregir acceso a arrays sin verificar límites (todos los scripts de diálogo y Temporizador)
+- [x] Corregir corrutinas en paralelo en `EjercicioRespiracion.cs`
+- [x] Agregar null checks en `DialogoBienvenida.robotMover`, `Interrupciones.temporizador`, `SimulacionBPM.displayText`, `Temporizador.robot`
 - [ ] Implementar pantalla de consentimiento informado (`ConsentManager`)
 - [ ] Implementar `TelemetryService` singleton + `SessionStore`
 - [ ] Integrar eventos KPI en formularios de cierre (`ueq_response`, `future_use_intent`, `learning_value_rating`)
-- [ ] Guardar emociones iniciales en JSON (`emotion_check_in` pre)
+- [x] Guardar emociones iniciales en JSON (`emotion_check_in` pre)
 - [ ] Implementar preguntas de emoción en cierre y estructura JSON de respuestas
 
 ### Sprint 2 — Sistema de niveles y mejoras
@@ -209,3 +209,40 @@ Application.persistentDataPath/
 - No usar `transform.Find()` en runtime — asignar referencias en el Inspector
 - Evitar lógica en `Update()` que pueda reemplazarse con eventos o callbacks
 - Los nombres de clases y archivos deben coincidir exactamente
+
+---
+
+## Dashboard de avance (generado en Claude CoWork)
+
+Este archivo (`CLAUDE.md`) se usa como contexto para generar un dashboard de progreso del proyecto en Claude Code mode **CoWork**.
+
+### Cómo usarlo
+
+1. **Copia todo este contenido** (CLAUDE.md completo)
+2. **Abre Claude Code → CoWork mode**
+3. **Pega CLAUDE.md como contexto** (primer mensaje)
+4. **Adjunta tu Gantt** (exportado como CSV, imagen, o descripción)
+5. **Solicita al sistema**: _"Genera un dashboard de progreso basado en este CLAUDE.md y el Gantt. Incluye: % completado global, estado por sprint, bugs críticos abiertos, últimos cambios relevantes, próximas acciones recomendadas."_
+
+### Qué espera el dashboard
+
+El sistema generará un markdown o HTML con:
+
+| Sección | Contenido |
+|---|---|
+| **Resumen ejecutivo** | % global, sprint actual, ETA de hitos |
+| **Estado por sprint** | ✅/⏳/❌ items, burndown visual, riesgos |
+| **Bugs críticos** | Issues Sprint 1-4 sin resolver |
+| **Últimos 5 commits** | `git log --oneline -5` (relevantes) |
+| **Próximas acciones** | Top 3 tareas "hacer ahora" |
+| **Métricas clave** | Velocidad (items/sprint), trend |
+
+### Frecuencia de actualización
+
+- **Cada semana** tras revisar avances
+- **Tras cierre de sprint** para snapshot
+- **Ad-hoc** si solicitas estado específico en CoWork
+
+### Nota
+
+El dashboard **no se versionea** en git. Es un documento de trabajo local generado bajo demanda en CoWork. CLAUDE.md es la "fuente de verdad" que alimenta su generación.

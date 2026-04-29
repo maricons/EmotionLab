@@ -13,17 +13,39 @@ public class Interrupciones : MonoBehaviour
     public AudioSource musicaDeInterrupcion;
     [Header("UI")]
     public GameObject textoNotificacion;
+
+    [Header("Configuración interrupción")]
+    [Tooltip("Tiempo restante (en segundos) en el que se dispara la interrupción del generador.")]
+    public float umbralInterrupcion = 110f;
+
+    [Tooltip("Volumen de la música de fondo cuando NO hay interrupción (volumen 'normal').")]
+    [Range(0f, 1f)] public float volumenFondoNormal = 0.1f;
+
+    [Tooltip("Volumen de la música de interrupción cuando está activa.")]
+    [Range(0f, 1f)] public float volumenInterrupcionActiva = 0.8f;
+
     private float tiempoActual;
     private bool interrupcionGenerador = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        // Asegurarnos de que la música de interrupción esté lista pero en silencio.
+        // Música de interrupción: detenida por completo hasta que se necesite.
+        // (Antes se ponía con volumen 0 pero seguía reproduciéndose, lo que
+        //  causaba que se escuchara al entrar a la escena en Oficina.)
         if (musicaDeInterrupcion != null)
         {
-            musicaDeInterrupcion.volume = 0;
-            musicaDeInterrupcion.Play(); // La ponemos en play, pero con volumen 0
+            musicaDeInterrupcion.volume = 0f;
+            musicaDeInterrupcion.Stop();
         }
+
+        // Música de fondo: garantizamos que esté sonando al volumen normal.
+        if (musicaDeFondo != null)
+        {
+            musicaDeFondo.volume = volumenFondoNormal;
+            if (!musicaDeFondo.isPlaying) musicaDeFondo.Play();
+        }
+
         // Nos aseguramos de que el texto de notificación esté oculto
         if (textoNotificacion != null)
         {
@@ -34,9 +56,17 @@ public class Interrupciones : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (temporizador == null) return;
+
+        // No disparar la interrupción hasta que el participante haya pulsado
+        // "Comenzar" y el temporizador esté efectivamente corriendo.
+        // (Esto evita que en Oficina se rompa el generador antes de empezar
+        //  cuando tiempoInicial es <= umbralInterrupcion.)
+        if (!temporizador.getTemporizadorActivo()) return;
+
         tiempoActual = temporizador.getTiempoRestante();
 
-        if (!interrupcionGenerador && tiempoActual <= 110)
+        if (!interrupcionGenerador && tiempoActual <= umbralInterrupcion)
         {
             InterrumpirGenerador();
             interrupcionGenerador = true;
@@ -45,14 +75,20 @@ public class Interrupciones : MonoBehaviour
 
     public void InterrumpirGenerador()
     {
-        foreach (GameObject prefab in prefabs)
+        if (prefabs != null)
         {
-            prefab.SetActive(false);
+            foreach (GameObject prefab in prefabs)
+            {
+                if (prefab != null) prefab.SetActive(false);
+            }
         }
 
-        foreach (GameObject particula in particulas)
+        if (particulas != null)
         {
-            particula.SetActive(true);
+            foreach (GameObject particula in particulas)
+            {
+                if (particula != null) particula.SetActive(true);
+            }
         }
         // Mostrar el texto de notificación
         if (textoNotificacion != null)
@@ -63,25 +99,32 @@ public class Interrupciones : MonoBehaviour
         // Bajar la música de fondo y subir la de interrupción
         if (musicaDeFondo != null)
         {
-            musicaDeFondo.volume = 0f; 
+            musicaDeFondo.volume = 0f;
         }
-        
+
         if (musicaDeInterrupcion != null)
         {
-            musicaDeInterrupcion.volume = 0.8f; 
+            musicaDeInterrupcion.volume = volumenInterrupcionActiva;
+            if (!musicaDeInterrupcion.isPlaying) musicaDeInterrupcion.Play();
         }
     }
     // Necesitarás llamar a esta función cuando el evento TERMINE
     public void TerminarInterrupcionGenerador()
     {
         // Revertir todo
-        foreach (GameObject prefab in prefabs)
+        if (prefabs != null)
         {
-            prefab.SetActive(true);
+            foreach (GameObject prefab in prefabs)
+            {
+                if (prefab != null) prefab.SetActive(true);
+            }
         }
-        foreach (GameObject particula in particulas)
+        if (particulas != null)
         {
-            particula.SetActive(false);
+            foreach (GameObject particula in particulas)
+            {
+                if (particula != null) particula.SetActive(false);
+            }
         }
         // Ocultar el texto de notificación
         if (textoNotificacion != null)
@@ -91,12 +134,13 @@ public class Interrupciones : MonoBehaviour
         // Bajar la música de interrupción y subir la de fondo
         if (musicaDeFondo != null)
         {
-            musicaDeFondo.volume = 0.1f; // Vuelve al volumen normal
+            musicaDeFondo.volume = volumenFondoNormal; // Vuelve al volumen normal
         }
-        
+
         if (musicaDeInterrupcion != null)
         {
-            musicaDeInterrupcion.volume = 0; // Silencia la música de interrupción
+            musicaDeInterrupcion.volume = 0f;
+            musicaDeInterrupcion.Stop(); // Detener para no consumir recursos
         }
     }
     // Esta función PÚBLICA solo oculta el texto de notificación
