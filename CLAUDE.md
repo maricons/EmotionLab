@@ -160,7 +160,7 @@ Application.persistentDataPath/
 ## Refactors pendientes por sprint
 
 ### Sprint 1 — Estabilidad base
-- [ ] Unificar `DialogoBienvenida`, `DialogoPreparacion` y `DialogoTips` en una sola clase `DialogoBase` configurable por Inspector
+- [x] Unificar `DialogoBienvenida`, `DialogoPreparacion` y `DialogoTips` en una sola clase `DialogoBase` configurable por Inspector
 - [x] Corregir acceso a arrays sin verificar límites (todos los scripts de diálogo y Temporizador)
 - [x] Corregir corrutinas en paralelo en `EjercicioRespiracion.cs`
 - [x] Agregar null checks en `DialogoBienvenida.robotMover`, `Interrupciones.temporizador`, `SimulacionBPM.displayText`, `Temporizador.robot`
