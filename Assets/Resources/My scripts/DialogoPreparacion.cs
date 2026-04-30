@@ -1,66 +1,46 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class DialogoPreparacion : MonoBehaviour
+/// <summary>
+/// Diálogo que aparece cuando el robot llega cerca de un punto destino.
+/// Espera en Update() a que el robot se acerque a 'targetPosition' y
+/// entonces muestra el primer panel.
+///
+/// La lógica de navegación (textPanels, currentPanelIndex, OnNextButton,
+/// OnSkipIntroButton) vive en <see cref="DialogoBase"/>.
+/// </summary>
+public class DialogoPreparacion : DialogoBase
 {
-    public GameObject[] textPanels; // Paneles con cuadros de texto
-    private int currentPanelIndex = 0;
+    [Header("Disparador por proximidad del robot")]
+    [Tooltip("Robot que debe acercarse a 'targetPosition' para activar el primer panel.")]
+    public GameObject robot;
 
-    public GameObject robot; // Asignar desde el editor
+    [Tooltip("Posición destino. Cuando el robot está a <1 unidad, se muestra el panel inicial.")]
+    public Transform targetPosition;
 
-    private bool flag = false;
-    public Transform targetPosition;  // Asigna la posición destino desde el editor
+    [Tooltip("Distancia (en unidades) por debajo de la cual se considera que el robot 'llegó'.")]
+    public float distanciaActivacion = 1f;
 
+    private bool primerPanelMostrado = false;
 
     void Update()
     {
-        // Validar referencias antes de calcular distancia
+        if (primerPanelMostrado) return;
         if (robot == null || targetPosition == null) return;
 
-        //ver si el robot está cerca de la posicion deseada
-        if (!flag && Vector3.Distance(robot.transform.position, targetPosition.position) < 1)
+        if (Vector3.Distance(robot.transform.position, targetPosition.position) < distanciaActivacion)
         {
-            flag = true;
-        }
-
-
-        if (flag == true && currentPanelIndex == 0)
-        {
-            if (textPanels != null && currentPanelIndex < textPanels.Length
-                && textPanels[currentPanelIndex] != null)
-            {
-                textPanels[currentPanelIndex].SetActive(true);
-            }
-            flag = false; // Resetear la bandera para que no se active de nuevo
+            primerPanelMostrado = true;
+            ShowCurrentPanel();
         }
     }
 
-
-    public void OnNextButton()
+    /// <summary>
+    /// Override: en este diálogo, Skip solo cierra paneles sin disparar
+    /// nada al final (a diferencia de DialogoBienvenida).
+    /// </summary>
+    protected override void OnSkipFinished()
     {
-        if (textPanels != null && currentPanelIndex >= 0 && currentPanelIndex < textPanels.Length
-            && textPanels[currentPanelIndex] != null)
-        {
-            textPanels[currentPanelIndex].SetActive(false);
-        }
-
-        currentPanelIndex++;
-
-        if (textPanels != null && currentPanelIndex < textPanels.Length
-            && textPanels[currentPanelIndex] != null)
-        {
-            textPanels[currentPanelIndex].SetActive(true);
-        }
-
-    }
-
-    public void OnSkipIntroButton()
-    {
-        if (textPanels == null) return;
-        foreach (GameObject panel in textPanels)
-        {
-            if (panel != null) panel.SetActive(false);
-        }
-
+        // Intencionalmente vacío: Skip aquí solo oculta los paneles,
+        // no desencadena ninguna acción posterior.
     }
 }
