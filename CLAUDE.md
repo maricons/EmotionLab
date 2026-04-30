@@ -30,17 +30,24 @@ This is a Unity project with no CLI build tooling. All building, running, and te
 ## Scene Flow
 
 ```
-Waiting Room  →  Oficina (Office)  OR  Salón (Hall)  →  Cierre (Closure)
+Waiting Room  →  Oficina (Office) = "Fácil"  OR  Salón (Hall) = "Difícil"  →  Cierre (Closure)
 ```
 
-- **Waiting Room:** Participant fills out a pre-task questionnaire (clipboard UI)
-- **Oficina:** Timed office task with a generator failure interruption event at t=110s
-- **Salón:** Guided breathing exercise (3 inhale/hold/exhale cycles with animated balloon)
-- **Cierre:** Wrap-up scene with post-experience questionnaires and KPI data flush
+- **Waiting Room:** Participant fills out a pre-task questionnaire (clipboard UI) y elige nivel de dificultad en la pizarra ("Fácil" o "Difícil").
+- **Oficina:** Nivel **Fácil**. Timed office task with a generator failure interruption event at t=110s.
+- **Salón:** Nivel **Difícil**. Guided breathing exercise (3 inhale/hold/exhale cycles with animated balloon).
+- **Cierre:** Wrap-up scene with post-experience questionnaires and KPI data flush.
+
+> ⚠️ **Importante:** la pizarra del Waiting Room muestra "Fácil" / "Difícil" pero los nombres internos de las escenas siguen siendo `Oficina` y `Salón`. El mapeo es:
+> - Botón "Fácil" → carga escena `Oficina`
+> - Botón "Difícil" → carga escena `Salón`
+>
+> Esto debe documentarse al participante y registrarse como **metadato de sesión** (`difficulty_level: "facil" | "dificil"`) por `TelemetryService` / `SessionStore`, junto con `session_id`. Esencial para análisis posterior — sin esto no se puede correlacionar respuestas con dificultad.
 
 Scene and presentation selection is stored in `PlayerPrefs` by `MenuSelector`:
-- `"EscenaSeleccionada"` — target scene name
+- `"EscenaSeleccionada"` — target scene name (`"Oficina"` o `"Salón"`)
 - `"PresentacionSeleccionada"` — presentation folder name
+- (pendiente) `"DificultadSeleccionada"` — `"facil"` | `"dificil"` para que `TelemetryService` lo capture sin re-derivar del nombre de escena.
 
 ---
 
@@ -129,9 +136,22 @@ El sistema de telemetría captura automáticamente los KPIs del estudio sin back
 | `facilitator_error_log` | Tasa de errores de uso (KPI 1.3) | Panel del facilitador, +1 por incidente |
 | `facilitator_rubric_speech` | Claridad y fluidez del discurso (KPI 3.2) | Rúbrica del facilitador |
 
+### Metadatos de sesión (session-level)
+
+Además de los eventos puntuales, cada sesión guarda metadatos estables que se asignan al inicio y aplican a toda la captura:
+
+| Metadato | Valores | Origen | Propósito |
+|---|---|---|---|
+| `session_id` | UUID v4 | Generado al inicio | Identificador único anonimizado |
+| `device_id_hash` | SHA-256 hash | `SystemInfo.deviceUniqueIdentifier` | Trazabilidad por dispositivo |
+| `difficulty_level` | `"facil"` \| `"dificil"` | Botón pizarra Waiting Room (Fácil/Difícil) | Correlacionar respuestas y KPIs con nivel |
+| `presentation_id` | string | Selección en Waiting Room | Qué presentación se usó |
+| `started_at` / `ended_at` | ISO timestamp | Inicio/fin de sesión | Duración total |
+
+> Sin `difficulty_level` registrado, no se puede analizar si las emociones / KPIs varían entre niveles. Es **obligatorio** capturarlo al cargar la escena de Oficina o Salón.
+
 ### Anonimización
-- No se almacenan nombres ni correos. Cada sesión recibe un `session_id` UUID v4.
-- El `device_id_hash` es SHA-256 de `SystemInfo.deviceUniqueIdentifier` (opcional).
+- No se almacenan nombres ni correos.
 - Exportar archivos al final de cada jornada y eliminarlos del dispositivo.
 
 ### Archivos generados
