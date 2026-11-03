@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -15,37 +15,37 @@ using System.Collections; // Necesario para las corrutinas
 ///   - En PC:   C:\Users\USUARIO\AppData\LocalLow\[Company]\EmotionLab\...
 ///   - En Quest: /storage/emulated/0/Android/data/[packageName]/files/...
 ///
-/// Uso típico:
+/// Uso tÃ­pico:
 ///   EmotionDataManager.Instance.IniciarSesion("participante_001");
 ///   EmotionDataManager.Instance.RegistrarRespuesta(
-///       "waiting_room", "sentir_hoy", "¿Cómo te sientes hoy?", "bien", 3);
+///       "waiting_room", "sentir_hoy", "Â¿CÃ³mo te sientes hoy?", "bien", 3);
 ///   EmotionDataManager.Instance.GuardarAJson();
 /// </summary>
 public class EmotionDataManager : MonoBehaviour
 {
     public static EmotionDataManager Instance { get; private set; }
 
-    [Header("Configuración")]
-    [Tooltip("Nombre de carpeta donde se guardan los JSON de sesión.")]
+    [Header("ConfiguraciÃ³n")]
+    [Tooltip("Nombre de carpeta donde se guardan los JSON de sesiÃ³n.")]
     public string carpetaSesiones = "EmotionLabSesiones";
     [SerializeField]
-    public string apiUrl = "https://c2a1zfsvcj.execute-api.us-east-1.amazonaws.com/prod/data";
+    public string apiUrl = "https://cntbcwfel0.execute-api.us-east-1.amazonaws.com/prod/data";
 
-    [Tooltip("Si está activo, también imprime el JSON en la consola al guardar.")]
+    [Tooltip("Si estÃ¡ activo, tambiÃ©n imprime el JSON en la consola al guardar.")]
     public bool logEnConsola = true;
 
-    [Tooltip("Guarda a disco automáticamente al cambiar de escena.")]
+    [Tooltip("Guarda a disco automÃ¡ticamente al cambiar de escena.")]
     public bool guardarAlCambiarEscena = true;
 
-    [Tooltip("Guarda a disco automáticamente al cerrar la aplicación o pausarla (Quest).")]
+    [Tooltip("Guarda a disco automÃ¡ticamente al cerrar la aplicaciÃ³n o pausarla (Quest).")]
     public bool guardarAlCerrarApp = true;
 
-    // ---- Datos de la sesión actual ----
+    // ---- Datos de la sesiÃ³n actual ----
     public SesionData sesionActual;
 
     void Awake()
     {
-        // Implementación singleton
+        // ImplementaciÃ³n singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -54,7 +54,7 @@ public class EmotionDataManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Si nadie inició sesión aún, la iniciamos de forma automática
+        // Si nadie iniciÃ³ sesiÃ³n aÃºn, la iniciamos de forma automÃ¡tica
         if (sesionActual == null)
         {
             IniciarSesion(null);
@@ -86,20 +86,20 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Inicia una nueva sesión. Llamar al principio del experimento.
-    /// Si idParticipante es null/vacío se genera uno automático.
+    /// Inicia una nueva sesiÃ³n. Llamar al principio del experimento.
+    /// Si idParticipante es null/vacÃ­o se genera uno automÃ¡tico.
     /// </summary>
     public void IniciarSesion(string idParticipante)
     {
-        // Si ya hay una sesión activa y con ID válido, no la reiniciamos para no perder respuestas
+        // Si ya hay una sesiÃ³n activa y con ID vÃ¡lido, no la reiniciamos para no perder respuestas
         if (sesionActual != null && !string.IsNullOrEmpty(sesionActual.idParticipante) && string.IsNullOrEmpty(idParticipante))
         {
             if (logEnConsola)
-                Debug.Log($"[EmotionDataManager] Sesión existente conservada: {sesionActual.idParticipante}");
+                Debug.Log($"[EmotionDataManager] SesiÃ³n existente conservada: {sesionActual.idParticipante}");
             return;
         }
 
-        // Generamos un código alfanumérico único de 8 caracteres al final (GUID)
+        // Generamos un cÃ³digo alfanumÃ©rico Ãºnico de 8 caracteres al final (GUID)
         string hashUnico = Guid.NewGuid().ToString().Substring(0, 8);
 
         string idFinal = string.IsNullOrEmpty(idParticipante) 
@@ -115,13 +115,13 @@ public class EmotionDataManager : MonoBehaviour
         };
 
         if (logEnConsola)
-            Debug.Log($"[EmotionDataManager] Sesión iniciada CON ÉXITO: {sesionActual.idParticipante}");
+            Debug.Log($"[EmotionDataManager] SesiÃ³n iniciada CON Ã‰XITO: {sesionActual.idParticipante}");
 
         LogEvent("session_started", "inicio");
     }
 
     /// <summary>
-    /// Punto único de entrada para registrar eventos KPI puntuales
+    /// Punto Ãºnico de entrada para registrar eventos KPI puntuales
     /// (ej. "session_started", "session_completed", "breathing_technique_used").
     /// </summary>
     public void LogEvent(string nombre, string fase = null, string payload = null)
@@ -143,7 +143,7 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Registra una respuesta NUEVA en la sesión actual (siempre añade).
+    /// Registra una respuesta NUEVA en la sesiÃ³n actual (siempre aÃ±ade).
     /// Usar para registros tipo log/timeline.
     /// </summary>
     public void RegistrarRespuesta(string escena, string idPregunta, string textoPregunta,
@@ -193,8 +193,8 @@ public class EmotionDataManager : MonoBehaviour
         {
             existente.respuestaLabel = respuestaLabel;
             existente.respuestaIndex = respuestaIndex;
-            existente.textoPregunta = textoPregunta; // por si se editó
-            existente.timestamp = timestamp; // timestamp de la última modificación
+            existente.textoPregunta = textoPregunta; // por si se editÃ³
+            existente.timestamp = timestamp; // timestamp de la Ãºltima modificaciÃ³n
         }
         else
         {
@@ -215,14 +215,14 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Guarda el estado completo de la sesión a un archivo JSON.
-    /// Retorna la ruta absoluta del archivo guardado (o null si falló).
+    /// Guarda el estado completo de la sesiÃ³n a un archivo JSON.
+    /// Retorna la ruta absoluta del archivo guardado (o null si fallÃ³).
     /// </summary>
     public string GuardarAJson()
     {
         if (sesionActual == null || string.IsNullOrEmpty(sesionActual.idParticipante))
             {
-                Debug.LogWarning("[EmotionDataManager] No hay sesión activa válida para guardar.");
+                Debug.LogWarning("[EmotionDataManager] No hay sesiÃ³n activa vÃ¡lida para guardar.");
                 return null;
             }
 
@@ -255,7 +255,7 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Devuelve la ruta completa donde se guardan los JSON (útil para mostrársela al investigador).
+    /// Devuelve la ruta completa donde se guardan los JSON (Ãºtil para mostrÃ¡rsela al investigador).
     /// </summary>
     public string GetRutaCarpeta()
     {
@@ -263,7 +263,7 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Registra el nivel de dificultad de la sesión ("facil" | "dificil").
+    /// Registra el nivel de dificultad de la sesiÃ³n ("facil" | "dificil").
     /// Llamar desde MenuSelector al seleccionar la escena.
     /// </summary>
     public void SetDifficultyLevel(string level)
@@ -275,7 +275,7 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Marca la sesión como finalizada registrando la hora de cierre.
+    /// Marca la sesiÃ³n como finalizada registrando la hora de cierre.
     /// Llamar desde FormularioCierre al completar el formulario.
     /// </summary>
 
@@ -285,12 +285,12 @@ public class EmotionDataManager : MonoBehaviour
         sesionActual.fechaFin = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         LogEvent("session_completed", "cierre");
         if (logEnConsola)
-            Debug.Log($"[EmotionDataManager] Sesión finalizada: {sesionActual.fechaFin}");
+            Debug.Log($"[EmotionDataManager] SesiÃ³n finalizada: {sesionActual.fechaFin}");
     }
 
     public SesionData GetSesionActual() => sesionActual;
 
-    // ---- Estado de completado / flujo Fácil-Difícil / rehacer sesión ----
+    // ---- Estado de completado / flujo FÃ¡cil-DifÃ­cil / rehacer sesiÃ³n ----
 
     public bool FacilCompletado => sesionActual != null && sesionActual.facilCompletado;
     public bool DificilCompletado => sesionActual != null && sesionActual.dificilCompletado;
@@ -298,9 +298,9 @@ public class EmotionDataManager : MonoBehaviour
     public string UltimoModoCompletado => sesionActual?.ultimoModoCompletado;
 
     /// <summary>
-    /// Marca un modo ("facil" | "dificil") como completado en la sesión actual.
-    /// Llamar al finalizar Oficina (Fácil) o Salón (Difícil). Retroalimentación
-    /// usa "ultimoModoCompletado" para decidir si debe encadenar al modo Difícil
+    /// Marca un modo ("facil" | "dificil") como completado en la sesiÃ³n actual.
+    /// Llamar al finalizar Oficina (FÃ¡cil) o SalÃ³n (DifÃ­cil). RetroalimentaciÃ³n
+    /// usa "ultimoModoCompletado" para decidir si debe encadenar al modo DifÃ­cil
     /// o continuar hacia Cierre.
     /// </summary>
     public void MarcarModoCompletado(string modo)
@@ -318,8 +318,8 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Marca que ya se usó el (único) "Volver a Empezar" de esta sesión.
-    /// Llamar desde el botón "Volver a Empezar" en Cierre, antes de recargar
+    /// Marca que ya se usÃ³ el (Ãºnico) "Volver a Empezar" de esta sesiÃ³n.
+    /// Llamar desde el botÃ³n "Volver a Empezar" en Cierre, antes de recargar
     /// Waiting Room.
     /// </summary>
     public void MarcarRetryUsado()
@@ -330,8 +330,8 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Genera una sesión completamente nueva (nuevo SessionID), descartando el
-    /// estado de completado de la sesión anterior. Llamar desde el botón
+    /// Genera una sesiÃ³n completamente nueva (nuevo SessionID), descartando el
+    /// estado de completado de la sesiÃ³n anterior. Llamar desde el botÃ³n
     /// "Nueva Experiencia" en Cierre, antes de recargar Waiting Room.
     /// </summary>
     public void IniciarNuevaSesion()
@@ -354,27 +354,36 @@ public class EmotionDataManager : MonoBehaviour
     }
 
     // ======================================================================
-    // Estructuras serializables (JsonUtility necesita [Serializable] + campos públicos)
+    // Estructuras serializables (JsonUtility necesita [Serializable] + campos pÃºblicos)
     // ======================================================================
 
     /// <summary>
-    /// Envía los datos de la sesión actual en formato JSON hacia la API de simulación (Beeceptor).
+    /// EnvÃ­a los datos de la sesiÃ³n actual en formato JSON hacia la API de simulaciÃ³n (Beeceptor).
     /// </summary>
     public void EnviarDatosAlServidor()
     {
         if (sesionActual == null) return;
 
-        // Convertimos el objeto de sesión actual a un string JSON limpio
+        // Convertimos el objeto de sesiÃ³n actual a un string JSON limpio
         string jsonPayload = JsonUtility.ToJson(sesionActual, prettyPrint: false);
         
-        // Iniciamos la corrutina para hacer la petición web en segundo plano
+        // Iniciamos la corrutina para hacer la peticiÃ³n web en segundo plano
         StartCoroutine(EnviarPostHttp(jsonPayload));
     }
 
     private IEnumerator EnviarPostHttp(string json)
     {
-        // Creamos la petición POST apuntando a tu URL de Beeceptor
-        using (UnityWebRequest request = new UnityWebRequest(apiUrl, "POST"))
+        // Creamos la peticiÃ³n POST apuntando a tu URL de Beeceptor
+        string urlDestino = apiUrl;
+        if (!string.IsNullOrEmpty(urlDestino))
+        {
+            urlDestino = urlDestino.Trim();
+            if (!urlDestino.StartsWith("http://") && !urlDestino.StartsWith("https://"))
+            {
+                urlDestino = "https://" + urlDestino;
+            }
+        }
+        using (UnityWebRequest request = new UnityWebRequest(urlDestino, "POST"))
         {
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -386,17 +395,17 @@ public class EmotionDataManager : MonoBehaviour
             if (logEnConsola)
                 Debug.Log($"[EmotionDataManager] Enviando JSON a la nube...");
 
-            // Esperamos a que la petición termine
+            // Esperamos a que la peticiÃ³n termine
             yield return request.SendWebRequest();
 
-            Debug.Log("[EmotionDataManager] URL REAL que se está llamando: " + request.url);
+            Debug.Log("[EmotionDataManager] URL REAL que se estÃ¡ llamando: " + request.url);
 
             // Revisamos el resultado
             if (request.result == UnityWebRequest.Result.Success)
             {
                 if (logEnConsola)
                 {
-                    Debug.Log("[EmotionDataManager] ¡Datos subidos con éxito a Beeceptor!");
+                    Debug.Log("[EmotionDataManager] Â¡Datos subidos con Ã©xito a Beeceptor!");
                     Debug.Log($"Respuesta del servidor: {request.downloadHandler.text}");
                 }
             }
