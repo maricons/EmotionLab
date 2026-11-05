@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,12 @@ public class PreguntasFormulario : MonoBehaviour
     public Sprite selectedImagePrefab;
 
     private int selectedIndex = -1;
+
+    /// <summary>
+    /// Se dispara cada vez que el jugador selecciona una opción, para que otros
+    /// sistemas (ej. habilitar el botón "Empezar" del board) puedan reaccionar.
+    /// </summary>
+    public event Action OnRespuestaSeleccionada;
 
     void Start()
     {
@@ -76,6 +83,8 @@ public class PreguntasFormulario : MonoBehaviour
         // Auto-guardado en EmotionDataManager
         if (autoGuardarAlSeleccionar)
             GuardarRespuestaEnManager();
+
+        OnRespuestaSeleccionada?.Invoke();
     }
 
     public int GetSelectedIndex()

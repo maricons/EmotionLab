@@ -20,6 +20,11 @@ public class DialogoPreparacion : DialogoBase
     [Tooltip("Distancia (en unidades) por debajo de la cual se considera que el robot 'llegó'.")]
     public float distanciaActivacion = 1f;
 
+    [Header("Revelación progresiva de la pizarra")]
+    [Tooltip("MenuSelector que controla la pizarra de selección (presentación/escena). Cada tablero " +
+             "se revela junto con el panel que lo explica, no al final de toda la secuencia.")]
+    public MenuSelector menuSelector;
+
     private bool primerPanelMostrado = false;
 
     void Update()
@@ -42,5 +47,29 @@ public class DialogoPreparacion : DialogoBase
     {
         // Intencionalmente vacío: Skip aquí solo oculta los paneles,
         // no desencadena ninguna acción posterior.
+    }
+
+    /// <summary>
+    /// Panel 0 = "Elección presentación", panel 1 = "Elección lugar". Cada tablero
+    /// de la pizarra se revela recién cuando Labbu termina de explicar ese paso
+    /// (al presionar "Siguiente" y ocultarse el panel), no mientras lo explica.
+    /// </summary>
+    protected override void OnPanelHidden(int panelIndex)
+    {
+        if (menuSelector == null)
+        {
+            Debug.LogWarning("[DialogoPreparacion] menuSelector no asignado en el Inspector.");
+            return;
+        }
+
+        switch (panelIndex)
+        {
+            case 0:
+                menuSelector.MostrarPresentaciones();
+                break;
+            case 1:
+                menuSelector.MostrarEscenarios();
+                break;
+        }
     }
 }

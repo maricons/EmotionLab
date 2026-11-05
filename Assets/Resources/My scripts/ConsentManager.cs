@@ -63,6 +63,13 @@ public class ConsentManager : MonoBehaviour
     void OnToggleChanged(bool isAccepted)
     {
         SetNextButtonState(isAccepted);
+
+        // Una vez marcado, bloquear el checkbox para que quede "confirmado".
+        // Esto evita que un click accidental (por ejemplo, el rayo del control
+        // temblando al apuntar y presionar "Comenzar") lo desmarque sin que el
+        // usuario lo haya tocado a propósito.
+        if (isAccepted && acceptToggle != null)
+            acceptToggle.interactable = false;
     }
 
     /// <summary>

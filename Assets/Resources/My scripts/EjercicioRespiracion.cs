@@ -6,14 +6,14 @@ using System.Collections;
 public class EjercicioRespiracion : MonoBehaviour
 {
     public GameObject balloonObject;        // 🎈 El globo o balón
-    public DialogoTips dialogoTips;         // 🔗 Referencia al script de diálogos
+    public DialogoBase dialogoTips;         // 🔗 Referencia al script de diálogos (cualquier subclase de DialogoBase)
     public int nextPanelIndexAfterExercise; // Panel al que debe ir después del ejercicio
 
     public int cycles = 3;                  // Número de respiraciones
     public float inhaleDuration = 4f;       // Duración inhalar
     public float holdDuration = 7f;         // Duración sostener
     public float exhaleDuration = 8f;       // Duración exhalar
-    public float scaleMultiplier = 1f;    // Tamaño máximo del globo al inhalar
+    public float scaleMultiplier = 0.7f;    // Tamaño máximo del globo al inhalar
     private bool isRunning = false;
     private Vector3 baseScale;
 
@@ -23,18 +23,16 @@ public class EjercicioRespiracion : MonoBehaviour
 
     [Header("UI opcional")] //Texto Inhala, Exhala
     public TextMeshProUGUI instructionText;
+    public Button inicioButton;
     //public GameObject panelText;
 
-        void Start()
+    void Start()
     {
         if (balloonObject != null)
         {
             baseScale = balloonObject.transform.localScale;
             balloonObject.SetActive(false);
         }
-
-        if (instructionText != null)
-            instructionText.gameObject.SetActive(false);
     }
 
 
@@ -79,7 +77,11 @@ public class EjercicioRespiracion : MonoBehaviour
     {
         isRunning = true;
 
+        if (EmotionDataManager.Instance != null)
+            EmotionDataManager.Instance.LogEvent("breathing_technique_used", "inicio");
+
         if (balloonObject != null) balloonObject.SetActive(true);
+        if (inicioButton != null) inicioButton.gameObject.SetActive(false);
         if (instructionText != null)
         {
             instructionText.gameObject.SetActive(true);
@@ -117,6 +119,9 @@ public class EjercicioRespiracion : MonoBehaviour
         if (balloonObject != null) balloonObject.SetActive(false);
         if (instructionText != null) instructionText.gameObject.SetActive(false);
         isRunning = false;
+
+        if (EmotionDataManager.Instance != null)
+            EmotionDataManager.Instance.LogEvent("breathing_technique_used", "completado");
 
         // Al terminar el ejercicio, decirle al script de diálogo que avance
         if (dialogoTips != null)

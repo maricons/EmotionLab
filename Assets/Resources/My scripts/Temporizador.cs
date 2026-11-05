@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class Temporizador : MonoBehaviour
 {
-    [Header("Configuración")]
+    [Header("ConfiguraciÃ³n")]
     public TMP_Text displayText;
     public float tiempoInicial = 120f; // Tiempo en segundos
     public bool autoIniciar = false;
@@ -16,18 +16,18 @@ public class Temporizador : MonoBehaviour
     public GameObject[] textPanels;
     private int currentPanelIndex = 0;
 
-    [Header("Transición de escena")]
-    [Tooltip("Nombre exacto de la escena de cierre. Debe estar añadida en File > Build Settings.")]
+    [Header("TransiciÃ³n de escena")]
+    [Tooltip("Nombre exacto de la escena de cierre. Debe estar aÃ±adida en File > Build Settings.")]
     public string escenaSiguiente = "Cierre";
 
-    [Tooltip("Si está activo, al expirar el tiempo se cambia automáticamente a 'escenaSiguiente' " +
+    [Tooltip("Si estÃ¡ activo, al expirar el tiempo se cambia automÃ¡ticamente a 'escenaSiguiente' " +
              "tras 'delayAntesDeTransicion' segundos. " +
-             "RECOMENDADO: dejarlo en FALSE y conectar IrAEscenaSiguiente() al botón 'Comenzar' " +
-             "del panel final desde el Inspector (OnClick). Es más determinista; el Invoke se " +
+             "RECOMENDADO: dejarlo en FALSE y conectar IrAEscenaSiguiente() al botÃ³n 'Comenzar' " +
+             "del panel final desde el Inspector (OnClick). Es mÃ¡s determinista; el Invoke se " +
              "cancela si algo desactiva el GameObject del Temporizador.")]
     public bool transicionAutomaticaAlExpirar = false;
 
-    [Tooltip("Solo se usa si 'transicionAutomaticaAlExpirar' está activo.")]
+    [Tooltip("Solo se usa si 'transicionAutomaticaAlExpirar' estÃ¡ activo.")]
     public float delayAntesDeTransicion = 30f;
 
     private float tiempoRestante;
@@ -113,7 +113,7 @@ public class Temporizador : MonoBehaviour
         return string.Format("{0:00}:{1:00}:{2:00}", horas, minutos, segundos);
     }
 
-    // Métodos públicos para controlar el temporizador
+    // MÃ©todos pÃºblicos para controlar el temporizador
     public void IniciarTemporizador()
     {
         temporizadorActivo = true;
@@ -139,12 +139,12 @@ public class Temporizador : MonoBehaviour
     // Evento cuando el temporizador llega a cero
     private void TemporizadorCompletado()
     {
-        Debug.Log("¡Tiempo completado!");
+        Debug.Log("Â¡Tiempo completado!");
 
-        // Solo transiciona automáticamente si el flag está activo.
-        // En el flujo normal el participante interactúa con el robot
-        // (ejercicio de respiración u otro), y la transición se dispara
-        // al final de ese flujo llamando a IrAEscenaSiguiente() desde un botón.
+        // Solo transiciona automÃ¡ticamente si el flag estÃ¡ activo.
+        // En el flujo normal el participante interactÃºa con el robot
+        // (ejercicio de respiraciÃ³n u otro), y la transiciÃ³n se dispara
+        // al final de ese flujo llamando a IrAEscenaSiguiente() desde un botÃ³n.
         if (transicionAutomaticaAlExpirar
             && !transicionLanzada
             && !string.IsNullOrEmpty(escenaSiguiente))
@@ -156,8 +156,8 @@ public class Temporizador : MonoBehaviour
 
     /// <summary>
     /// Carga la escena configurada en 'escenaSiguiente'.
-    /// Pública para poder conectarla desde un botón del Inspector (OnClick),
-    /// desde el final del ejercicio de respiración, o desde cualquier otro
+    /// PÃºblica para poder conectarla desde un botÃ³n del Inspector (OnClick),
+    /// desde el final del ejercicio de respiraciÃ³n, o desde cualquier otro
     /// punto del flujo del robot.
     /// </summary>
     public void IrAEscenaSiguiente()
@@ -165,9 +165,16 @@ public class Temporizador : MonoBehaviour
         if (transicionLanzada) return; // Evitar dobles transiciones
         transicionLanzada = true;
 
+        // Marcar modo completado en EmotionDataManager automáticamente
+        string escenaActual = SceneManager.GetActiveScene().name;
+        if (escenaActual.IndexOf("Oficina", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            EmotionDataManager.Instance?.MarcarModoCompletado("facil");
+        else if (escenaActual.IndexOf("Sal", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            EmotionDataManager.Instance?.MarcarModoCompletado("dificil");
+
         if (string.IsNullOrEmpty(escenaSiguiente))
         {
-            Debug.LogWarning("[Temporizador] 'escenaSiguiente' está vacío. No se hace transición.");
+            Debug.LogWarning("[Temporizador] 'escenaSiguiente' estÃ¡ vacÃ­o. No se hace transiciÃ³n.");
             return;
         }
 

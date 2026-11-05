@@ -13,6 +13,7 @@ public class Interrupciones : MonoBehaviour
     public AudioSource musicaDeInterrupcion;
     [Header("UI")]
     public GameObject textoNotificacion;
+    public GameObject textoTransportación;
 
     [Header("Configuración interrupción")]
     [Tooltip("Tiempo restante (en segundos) en el que se dispara la interrupción del generador.")]
@@ -50,6 +51,10 @@ public class Interrupciones : MonoBehaviour
         if (textoNotificacion != null)
         {
             textoNotificacion.SetActive(false);
+        }
+        if (textoTransportación != null)
+        {
+            textoTransportación.SetActive(false);
         }
     }
 
@@ -94,6 +99,11 @@ public class Interrupciones : MonoBehaviour
         if (textoNotificacion != null)
         {
             textoNotificacion.SetActive(true);
+        }
+
+        if (textoTransportación != null)
+        {
+            textoTransportación.SetActive(true);
         }
 
         // Bajar la música de fondo y subir la de interrupción
@@ -149,6 +159,14 @@ public class Interrupciones : MonoBehaviour
         if (textoNotificacion != null)
         {
             textoNotificacion.SetActive(false);
+        }
+    }
+
+    public void OcultarMsjTeletransportacion()
+    {
+        if (textoTransportación != null)
+        {
+            textoTransportación.SetActive(false);
         }
     }
     // Esta función PÚBLICA solo muestra el texto de notificación

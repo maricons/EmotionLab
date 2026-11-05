@@ -97,8 +97,19 @@ public abstract class DialogoBase : MonoBehaviour
     protected void HideCurrentPanel()
     {
         if (HasPanelAt(currentPanelIndex))
+        {
             textPanels[currentPanelIndex].SetActive(false);
+            OnPanelHidden(currentPanelIndex);
+        }
     }
+
+    /// <summary>
+    /// Se llama justo cuando un panel se oculta al avanzar con "Siguiente"
+    /// (no al ocultarse todos de golpe por Skip). Permite a las subclases
+    /// disparar una acción recién cuando ese paso de la explicación terminó,
+    /// en vez de cuando el paso recién comienza.
+    /// </summary>
+    protected virtual void OnPanelHidden(int panelIndex) { }
 
     protected void HideAllPanels()
     {

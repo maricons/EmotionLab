@@ -17,19 +17,34 @@ public class DialogoCierre : DialogoBase
     public Button btnVamosAlCierre;
     public string escenaSiguiente = "Cierre";
 
+    [Header("Puente Fácil → Difícil")]
+    [Tooltip("Escena del modo Difícil a la que ir cuando el modo recién completado fue 'facil'. " +
+             "Si el modo recién completado fue 'dificil', se ignora y se usa 'escenaSiguiente'.")]
+    public string escenaDificil = "Salón";
+    [Tooltip("Panel con el mensaje de Labbu explicando que sigue el modo Difícil, con un botón que " +
+             "llama a OnContinuarADificil(). Se muestra en vez de navegar cuando el modo recién " +
+             "completado fue 'facil'.")]
+    public GameObject panelPuenteDificil;
+
     private void Start()
     {
         InputSystem.Update();
-        
+
         if (clipboard != null)
             clipboard.SetActive(false);
 
-        if (btnVamosAlCierre != null)        
+        if (btnVamosAlCierre != null)
             btnVamosAlCierre.interactable = false;
 
         currentPanelIndex = 0;
         HideAllPanels();
-        ShowCurrentPanel();
+
+        if (panelPuenteDificil != null)
+            panelPuenteDificil.SetActive(false);
+
+        // El panel 0 ("Capa Bienvenida") queda oculto a propósito: lo revela
+        // EjercicioRespiracion al terminar (dialogoTips.GoToPanel(0)), disparado
+        // por el botón "inicio_Button" de esta escena, no automáticamente aquí.
     }
 
     ///<summary>
@@ -72,10 +87,32 @@ public class DialogoCierre : DialogoBase
     
     protected override void OnSequenceFinished()
     {
-        // Cargamos la escena de cierre
+        string modo = EmotionDataManager.Instance?.UltimoModoCompletado;
+
+        // Si el modo recién completado fue Fácil, en vez de navegar directo a
+        // Cierre mostramos el puente hacia el modo Difícil.
+        if (modo == "facil" && panelPuenteDificil != null)
+        {
+            HideAllPanels();
+            panelPuenteDificil.SetActive(true);
+            return;
+        }
+
+        // Modo Difícil recién completado (o no hay puente configurado): cerrar normalmente.
         if (!string.IsNullOrEmpty(escenaSiguiente))
             SceneManager.LoadScene(escenaSiguiente);
         else
             Debug.LogWarning("[DialogoCierre] Escena siguiente no asignada en el Inspector.");
+    }
+
+    /// <summary>
+    /// Botón del panel puente hacia el modo Difícil (Salón).
+    /// </summary>
+    public void OnContinuarADificil()
+    {
+        if (!string.IsNullOrEmpty(escenaDificil))
+            SceneManager.LoadScene(escenaDificil);
+        else
+            Debug.LogWarning("[DialogoCierre] 'escenaDificil' no asignada en el Inspector.");
     }
 }
